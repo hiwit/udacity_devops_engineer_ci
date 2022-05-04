@@ -37,8 +37,8 @@ workflows:
   my-own-workflow:
     jobs:
       - say-fighters
-      requires:
-        - say-footos
+        requires:
+          - say-footos
       - say-footos
   say-hello-workflow:
     jobs:
