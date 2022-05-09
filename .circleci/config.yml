@@ -25,13 +25,18 @@ jobs:
     docker:
       - image: circleci/node:13.8.0
     steps:
+      - run:
+          name: "create workspace directory"
+          command: "mkdir -p /tmp/circleci"
+
+      - run:
+          name: "Say My Name"
+          command: "echo <<pipeline.id>> $CIRCLE_BRANCH $MY_FIRST_NAME > /tmp/circleci/output.txt"
+          
       - persist_to_workspace:
           root: "/tmp/circleci"
           paths:
             - "output.txt"
-      - run:
-          name: "Say My Name"
-          command: "echo <<pipeline.id>> $CIRCLE_BRANCH $MY_FIRST_NAME > /tmp/circleci/output.txt"
 
   print-my-name:
       docker:
