@@ -25,13 +25,14 @@ jobs:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - run:
-          name: "Say My Name"
-          command: "echo <<pipeline.id>> $CIRCLE_BRANCH $MY_FIRST_NAME > /tmp/circleci/output.txt"
       - persist_to_workspace:
           root: "/tmp/circleci"
           paths:
             - "output.txt"
+      - run:
+          name: "Say My Name"
+          command: "echo <<pipeline.id>> $CIRCLE_BRANCH $MY_FIRST_NAME > /tmp/circleci/output.txt"
+
   print-my-name:
       docker:
       - image: circleci/node:13.8.0
@@ -63,3 +64,4 @@ workflows:
     jobs:
       - say-hello
       - say-my-name
+      - print-my-name
