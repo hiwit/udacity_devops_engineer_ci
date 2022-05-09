@@ -27,7 +27,7 @@ jobs:
     steps:
       - run:
           name: "Say My Name"
-          command: "echo <<pipeline.id>> <<CIRCLE_BRANCH>> <<MY_FIRST_NAME>>"s
+          command: "echo <<pipeline.id>> <<CIRCLE_BRANCH>> <<MY_FIRST_NAME>>"
 
   say-hello:
     docker:
