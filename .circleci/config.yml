@@ -49,6 +49,15 @@ jobs:
           paths:
             - "output.txt"
 
+  throw-err:
+    <<: *defaults
+    steps:
+      - run: echo "won't work" > /a/b/c/fail.err
+      - run:
+          name: "Crashed"
+          command: echo "puh"
+          when: on_fail  
+
   print-my-name:
     <<: *defaults
     steps:
