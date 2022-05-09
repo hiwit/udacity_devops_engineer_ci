@@ -4,26 +4,27 @@ version: 2.1
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+
+defaults: &defaults
+  docker:
+    - image: circleci/node:13.8.0
 jobs:
   say-fighters:
-    docker:
-      - image: circleci/node:13.8.0
+    <<: *defaults
     steps:
       - run: 
           name: "Say Fighters"
           command: "echo 'fresh fighters'"
           
   say-footos:
-    docker:
-      - image: circleci/node:13.8.0
+    <<: *defaults
     steps:
       - run:
           name: "Say Footos"
           command: "echo footos"
 
   say-my-name:
-    docker:
-      - image: circleci/node:13.8.0
+    <<: *defaults
     steps:
       - run:
           name: "create workspace directory"
@@ -39,18 +40,16 @@ jobs:
             - "output.txt"
 
   print-my-name:
-      docker:
-      - image: circleci/node:13.8.0
-      steps:
-        - attach_workspace:
-            at: "/tmp/circleci"
-        - run:
-            name: "Say My Name"
-            command: "cat /tmp/circleci/output.txt"
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: "/tmp/circleci"
+      - run:
+          name: "Say My Name"
+          command: "cat /tmp/circleci/output.txt"
 
   say-hello:
-    docker:
-      - image: cimg/base:stable
+    <<: *defaults
     steps:
       - checkout
       - run:
