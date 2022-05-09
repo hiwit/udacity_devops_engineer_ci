@@ -86,6 +86,7 @@ workflows:
           requires:
             - say-footos
       - say-footos
+      - throw-err
   say-hello-workflow:
     jobs:
       - say-hello
