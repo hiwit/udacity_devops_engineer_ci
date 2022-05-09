@@ -70,4 +70,6 @@ workflows:
     jobs:
       - say-hello
       - say-my-name
-      - print-my-name
+      - print-my-name:
+          requires:
+            - say-my-name
