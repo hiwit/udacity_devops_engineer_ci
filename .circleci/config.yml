@@ -20,7 +20,14 @@ jobs:
       - run:
           name: "Say Footos"
           command: "echo footos"
-              
+
+  say-my-name:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - run:
+          name: "Say My Name"
+          command: "echo <<pipeline.id>> <<CIRCLE_BRANCH>> <<MY_FIRST_NAME>>"s
 
   say-hello:
     docker:
@@ -43,3 +50,4 @@ workflows:
   say-hello-workflow:
     jobs:
       - say-hello
+      - say-my-name
