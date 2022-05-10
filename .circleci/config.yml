@@ -18,12 +18,11 @@ commands:
 defaults: &defaults
   docker:
     - image: circleci/node:13.8.0
-  steps:
-    - checkout
 jobs:
   build:
     <<: *defaults
     steps:
+      - checkout
       - run: npm install
       - save_cache:
           key: "npm-cache"
@@ -32,12 +31,14 @@ jobs:
   test:
     <<: *defaults
     steps:
+      - checkout
       - restore_cache:
           key: "npm-cache"
       - run: npm test
   analzye:
     <<: *defaults
     steps:
+      - checkout
       - restore_cache:
           key: "npm-cache"
       - run: npm audit          
