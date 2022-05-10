@@ -18,79 +18,39 @@ commands:
 defaults: &defaults
   docker:
     - image: circleci/node:13.8.0
+  steps:
+    - checkout
 jobs:
-  say-fighters:
+  build:
     <<: *defaults
     steps:
-      - run: 
-          name: "Say Fighters"
-          command: "echo 'fresh fighters'"
-          
-  say-footos:
-    <<: *defaults
-    steps:
-      - run:
-          name: "Say Footos"
-          command: "echo footos"
-
-  say-my-name:
-    <<: *defaults
-    steps:
-      - run:
-          name: "create workspace directory"
-          command: "mkdir -p /tmp/circleci"
-
-      - run:
-          name: "Say My Name"
-          command: "echo <<pipeline.id>> $CIRCLE_BRANCH $MY_FIRST_NAME > /tmp/circleci/output.txt"
-
-      - persist_to_workspace:
-          root: "/tmp/circleci"
+      - run: npm install
+      - save_cache:
+          key: "npm-cache"
           paths:
-            - "output.txt"
-
-  throw-err:
+            - node_modules
+  test:
     <<: *defaults
     steps:
-      - run: echo "won't work" > /a/b/c/fail.err
-      - run:
-          name: "Crashed"
-          command: echo "puh"
-          when: on_fail  
-
-  print-my-name:
+      - restore_cache:
+          key: "npm-cache"
+      - run: npm test
+  analzye:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: "/tmp/circleci"
-      - say-hey:
-          to: "me"
-      - run:
-          name: "Say My Name"
-          command: "cat /tmp/circleci/output.txt"
-
-  say-hello:
-    <<: *defaults
-    steps:
-      - checkout
-      - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
-
+      - restore_cache:
+          key: "npm-cache"
+      - run: npm audit          
+        
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  my-own-workflow:
+  build-and-test:
     jobs:
-      - say-fighters:
+      - build
+      - test:
           requires:
-            - say-footos
-      - say-footos
-      - throw-err
-  say-hello-workflow:
-    jobs:
-      - say-hello
-      - say-my-name
-      - print-my-name:
+            - build
+      - analzye:
           requires:
-            - say-my-name
+            - test

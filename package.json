@@ -1,0 +1,22 @@
+{
+  "name": "foo",
+  "version": "1.0.0",
+  "description": "just a test",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hiwit/udacity_devops_engineer_ci.git"
+  },
+  "author": "hiwit",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hiwit/udacity_devops_engineer_ci/issues"
+  },
+  "homepage": "https://github.com/hiwit/udacity_devops_engineer_ci#readme",
+  "devDependencies": {
+    "jest": "^28.1.0"
+  }
+}
