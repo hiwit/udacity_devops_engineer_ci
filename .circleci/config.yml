@@ -18,6 +18,11 @@ commands:
 defaults: &defaults
   docker:
     - image: circleci/node:13.8.0
+debug: &debug
+  - run: |
+      ls -la 
+      cat package.json
+      ls -la node_modules
 jobs:
   build:
     <<: *defaults
@@ -28,6 +33,9 @@ jobs:
           key: "npm-cache"
           paths:
             - node_modules
+      - run: |
+          ls -la 
+
   test:
     <<: *defaults
     steps:
@@ -36,8 +44,6 @@ jobs:
           key: "npm-cache"
       - run: |
           ls -la 
-          cat package.json
-          ls -la node_modules
       - run: npm test
   analzye:
     <<: *defaults
