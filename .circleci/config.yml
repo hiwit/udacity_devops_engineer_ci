@@ -29,10 +29,10 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: v1-deps-{{ checksum "package-lock.json" }}
+          key: npm-cache
       - run: npm install
       - save_cache:
-          key: v1-deps-{{ checksum "package-lock.json" }}
+          key: npm-cache
           paths:
             - node_modules
       - run: |
@@ -44,7 +44,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-deps-{{ checksum "package-lock.json" }}
+            - npm-cache
       - run: |
           ls -la 
       - run: npm test
@@ -54,7 +54,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-           - v1-deps-{{ checksum "package-lock.json" }}
+           - npm-cache
       - run: npm audit          
         
 # Invoke jobs via workflows
