@@ -29,10 +29,10 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: npm-cache
+          key: npm-cache-v1
       - run: npm install
       - save_cache:
-          key: npm-cache
+          key: npm-cache-v1
           paths:
             - node_modules
       - run: |
@@ -44,7 +44,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - npm-cache
+            - npm-cache-v1
       - run: |
           ls -la 
       - run: npm test
@@ -54,7 +54,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-           - npm-cache
+           - npm-cache-v1
       - run: npm audit          
         
 # Invoke jobs via workflows
