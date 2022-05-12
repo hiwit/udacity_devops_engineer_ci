@@ -3,6 +3,27 @@ orbs:
   aws-cli: circleci/aws-cli@2.0.3
 
 jobs:
+  configure_infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - hiwit-${CIRCLE_WORKFLOW_ID:0:5}
+      - run:
+          name: debug cache
+          command: ls -la cache_ec2
+      - add_ssh_keys:
+          fingerprints: ["89:21:e4:6c:21:0c:65:35:2b:49:62:33:ad:d8:33:52"]
+      - run:
+          name: Install Ansible
+          command: |
+            apk add --update ansible
+      - run:
+          name: Run Playbook and Configure Server
+          command: |
+            ansible-playbook -i cache_ec2/inventory ansible/main-remote.yml
   create_infrastructure:
     docker:
       - image: amazon/aws-cli
@@ -15,8 +36,22 @@ jobs:
             --template-file infrastructure/infra.yml \
             --stack-name hiwit-${CIRCLE_WORKFLOW_ID:0:5} \
             --region us-east-1
+      - run:
+          name: ec2 cache
+          command: "mkdir -p cache_ec2"
+      - run:
+          name: Get EC2 instances
+          command: |
+            aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --filters 'Name=tag:project,Values=udacity' \
+            --output text >> cache_ec2/inventory
+      - save_cache:
+          paths:
+            - "cache_ec2"
+          key: hiwit-${CIRCLE_WORKFLOW_ID:0:5}
 workflows:
   prepare_infra:
     jobs:
       - create_infrastructure
-    
+      - configure_infrastructure
