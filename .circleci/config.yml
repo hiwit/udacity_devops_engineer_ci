@@ -47,8 +47,13 @@ jobs:
           command: |
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --filters 'Name=tag:project,Values=udacity' \
             --output text >> cache_ec2/inventory
+      - run:
+          name: debug cache
+          command: |
+           ls -la cache_ec2
+           echo "printing inventory"
+           cat cache_ec2/inventory
       - save_cache:
           paths:
             - "cache_ec2"
