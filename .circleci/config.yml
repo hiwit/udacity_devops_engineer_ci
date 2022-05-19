@@ -10,7 +10,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - hiwit-${CIRCLE_BUILD_NUM}
+            - hiwit-${CIRCLE_WORKFLOW_ID}
       - run:
           name: debug cache
           command: |
@@ -37,7 +37,7 @@ jobs:
           command: |
             aws cloudformation deploy \
             --template-file infrastructure/infra.yml \
-            --stack-name hiwit-${CIRCLE_BUILD_NUM} \
+            --stack-name hiwit-${CIRCLE_WORKFLOW_ID} \
             --region us-east-1
       - run:
           name: ec2 cache
@@ -57,7 +57,7 @@ jobs:
       - save_cache:
           paths:
             - "cache_ec2"
-          key: hiwit-${CIRCLE_BUILD_NUM}
+          key: hiwit-${CIRCLE_WORKFLOW_ID}
 workflows:
   create_infrastructure_and_deploy:
     jobs:
