@@ -9,7 +9,7 @@ commands:
           name: Destroy Environment
           when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name ${{CIRCLE_WORKFLOW_ID}}
+            aws cloudformation delete-stack --stack-name ${CIRCLE_WORKFLOW_ID}
 
 jobs:
   configure_infrastructure:
@@ -19,7 +19,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - cache-${{CIRCLE_WORKFLOW_ID}}
+            - cache-${CIRCLE_WORKFLOW_ID}
       - run:
           name: debug cache
           command: |
@@ -51,7 +51,7 @@ jobs:
           command: |
             aws cloudformation deploy \
             --template-file infrastructure/infra.yml \
-            --stack-name ${{CIRCLE_WORKFLOW_ID}} \
+            --stack-name ${CIRCLE_WORKFLOW_ID} \
             --region us-east-1
       - run:
           name: ec2 cache
@@ -71,7 +71,7 @@ jobs:
       - save_cache:
           paths:
             - "cache_ec2"
-          key: cache-${{CIRCLE_WORKFLOW_ID}}
+          key: cache-${CIRCLE_WORKFLOW_ID}
 workflows:
   create_infrastructure_and_deploy:
     jobs:
