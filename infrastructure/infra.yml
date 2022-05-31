@@ -15,7 +15,7 @@ Resources:
       # Change this, as applicable to you
       # You may need to find out what instance types are available in your region - use https://cloud-images.ubuntu.com/locator/ec2/
       # ImageId: 'ami-0f29c8402f8cce65c'
-      ImageId: 'ami-0c76ec1c339c9f28f' 
+      ImageId: 'ami-01f18be4e32df20e2' 
       InstanceType: t3.micro
 
   InstanceSecurityGroup:
