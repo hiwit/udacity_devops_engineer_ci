@@ -17,7 +17,10 @@
     state: present
 
 - name: "install pm2"
-  command: "npm install -g pm2"
+  npm:
+    name: pm2
+    state: present
+  # command: "npm install -g pm2"
 
 - name: "create web folder"
   file:
