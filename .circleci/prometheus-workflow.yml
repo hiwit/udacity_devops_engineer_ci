@@ -1,0 +1,31 @@
+version: 2.1
+orbs:
+  aws-cli: circleci/aws-cli@2.0.3
+
+commands:
+  destroy_environment:
+    steps:
+      - run:
+          name: Destroy Environment
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name ${CIRCLE_WORKFLOW_ID}
+
+jobs:  
+  create_infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Create Cloudformation Stack
+          command: |
+            aws cloudformation deploy \
+            --template-file infrastructure/prometheus-infra.yml \
+            --stack-name prometheus-${CIRCLE_WORKFLOW_ID} \
+            --region us-east-1
+      - destroy_environment
+workflows:
+  create_infrastructure_and_deploy:
+    jobs:
+      - create_infrastructure
