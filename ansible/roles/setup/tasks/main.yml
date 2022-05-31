@@ -16,8 +16,8 @@
     name: npm
     state: present
 
-# - name: "install pm2"
-#   command: "npm install -g pm2"
+- name: "install pm2"
+  command: "npm install -g pm2"
 
 - name: "create web folder"
   file:
@@ -34,17 +34,15 @@
   copy:
     src: package.json
     dest: ~/web
-- name: "debug"
-  command: |
-   ls ~/web
+
 
 - name: "run server"
   become: true
   command: |
-   npm start
-  args:
-    chdir: "~/web"
+    "pm2 start ~/web/index.js -f"
   # args:
   #   chdir: "~/web"
-  # command: "pm2 start ~/web/index.js -f"
+  # # args:
+  # #   chdir: "~/web"
+  # # command: "pm2 start ~/web/index.js -f"
   
