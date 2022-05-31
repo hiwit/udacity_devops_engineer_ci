@@ -38,7 +38,7 @@ jobs:
             ANSIBLE_HOST_KEY_CHECKING: "False"
           command: |
             ansible-playbook -i cache_ec2/inventory ansible/main-remote.yml
-      - destroy-environment:
+      - destroy-environment
   
       
   create_infrastructure:
