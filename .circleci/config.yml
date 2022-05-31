@@ -25,6 +25,8 @@ jobs:
             apk add --update ansible
       - run:
           name: Run Playbook and Configure Server
+          environment:
+            ANSIBLE_HOST_KEY_CHECKING: "False"
           command: |
             ansible-playbook -i cache_ec2/inventory ansible/main-remote.yml
   create_infrastructure:
