@@ -10,7 +10,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - cache5
+            - cache6
       - run:
           name: debug cache
           command: |
@@ -39,7 +39,7 @@ jobs:
           command: |
             aws cloudformation deploy \
             --template-file infrastructure/infra.yml \
-            --stack-name cache5 \
+            --stack-name cache6 \
             --region us-east-1
       - run:
           name: ec2 cache
@@ -59,7 +59,7 @@ jobs:
       - save_cache:
           paths:
             - "cache_ec2"
-          key: cache5
+          key: cache6
 workflows:
   create_infrastructure_and_deploy:
     jobs:

@@ -30,10 +30,21 @@
     src: index.js
     dest: ~/web
 
+- name: "copy package json"
+  copy:
+    src: package.json
+    dest: ~/web
+- name: "debug"
+  command: |
+   ls ~/web
+
 - name: "run server"
   become: true
-  command: "node index.js"
+  command: |
+   npm start
   args:
     chdir: "~/web"
+  # args:
+  #   chdir: "~/web"
   # command: "pm2 start ~/web/index.js -f"
   
