@@ -11,6 +11,11 @@ commands:
         type: string
     steps:
       - run:
+          name: debug
+          command: |
+            echo <<parameters.file_name>>
+            infrastructure/<<parameters.file_name>>.yml
+      - run:
           name: Create Infrastructure
           command: |
             aws cloudformation deploy \
