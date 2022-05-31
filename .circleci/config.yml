@@ -11,11 +11,6 @@ commands:
         type: string
     steps:
       - run:
-          name: debug
-          command: |
-            echo <<parameters.file_name>>
-            infrastructure/<<parameters.file_name>>.yml
-      - run:
           name: Create Infrastructure
           command: |
             aws cloudformation deploy \
@@ -36,6 +31,7 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
+      - checkout
       - create_stack:
           stack_name: prometheus-${CIRCLE_WORKFLOW_ID}
           file_name: "prometheus-infra"
