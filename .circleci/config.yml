@@ -3,6 +3,21 @@ orbs:
   aws-cli: circleci/aws-cli@2.0.3
 
 commands:
+  create_stack:
+    parameters:
+      stack_name:
+        type: string
+      file_name:
+        type: string
+    steps:
+      - run:
+          name: Create Infrastructure
+          command: |
+            aws cloudformation deploy \
+            --template-file infrastructure/<<parameters.file_name>>.yml \
+            --stack-name <<parameters.stack_name>> \
+            --region us-east-1
+
   destroy_environment:
     steps:
       - run:
@@ -12,6 +27,12 @@ commands:
             aws cloudformation delete-stack --stack-name ${CIRCLE_WORKFLOW_ID}
 
 jobs:
+  create_prometheus_infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - create_stack:
+          stack_name: prometheus-${CIRCLE_WORKFLOW_ID}
   configure_infrastructure:
     docker:
       - image: python:3.7-alpine3.11
@@ -41,41 +62,41 @@ jobs:
       - destroy_environment
   
       
-  create_infrastructure:
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          name: Create Cloudformation Stack
-          command: |
-            aws cloudformation deploy \
-            --template-file infrastructure/infra.yml \
-            --stack-name ${CIRCLE_WORKFLOW_ID} \
-            --region us-east-1
-      - run:
-          name: ec2 cache
-          command: "mkdir -p cache_ec2"
-      - run:
-          name: Get EC2 instances
-          command: |
-            aws ec2 describe-instances \
-            --query 'Reservations[*].Instances[*].PublicIpAddress' \
-            --output text >> cache_ec2/inventory
-      - run:
-          name: debug cache
-          command: |
-           ls -la cache_ec2
-           echo "printing inventory"
-           cat cache_ec2/inventory
-      - save_cache:
-          paths:
-            - "cache_ec2"
-          key: cache-${CIRCLE_WORKFLOW_ID}
-# workflows:
-#   create_infrastructure_and_deploy:
-#     jobs:
-#       - create_infrastructure
-#       - configure_infrastructure:
-#           requires: 
-#             - create_infrastructure
+  # create_infrastructure:
+  #   docker:
+  #     - image: amazon/aws-cli
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: Create Cloudformation Stack
+  #         command: |
+  #           aws cloudformation deploy \
+  #           --template-file infrastructure/infra.yml \
+  #           --stack-name ${CIRCLE_WORKFLOW_ID} \
+  #           --region us-east-1
+  #     - run:
+  #         name: ec2 cache
+  #         command: "mkdir -p cache_ec2"
+  #     - run:
+  #         name: Get EC2 instances
+  #         command: |
+  #           aws ec2 describe-instances \
+  #           --query 'Reservations[*].Instances[*].PublicIpAddress' \
+  #           --output text >> cache_ec2/inventory
+  #     - run:
+  #         name: debug cache
+  #         command: |
+  #          ls -la cache_ec2
+  #          echo "printing inventory"
+  #          cat cache_ec2/inventory
+  #     - save_cache:
+  #         paths:
+  #           - "cache_ec2"
+  #         key: cache-${CIRCLE_WORKFLOW_ID}
+workflows:
+  create_infrastructure_and_deploy:
+    jobs:
+      - create_prometheus_infrastructure
+      # - configure_infrastructure:
+      #     requires: 
+      #       - create_infrastructure
