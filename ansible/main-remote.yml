@@ -1,10 +1,18 @@
 ---
 #Excercise for setting up a webserver in an ec2 instance
+# - name: Excercise for setting up a webserver in an ec2 instance
+#   hosts: all
+#   user: ubuntu
+#   become: true
+#   become_method: sudo
+#   become_user: root
+#   roles:
+#     - setup
 - name: Excercise for setting up a webserver in an ec2 instance
-  hosts: all
+  hosts: prometheus
   user: ubuntu
   become: true
   become_method: sudo
   become_user: root
   roles:
-    - setup
+    - prometheus

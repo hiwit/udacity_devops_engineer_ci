@@ -1,0 +1,133 @@
+---
+- name: Create Prometheus user
+  user:
+    name: prometheus
+    create_home: false
+
+- name: "create prometheus etc folder"
+  file:
+    path: /etc/prometheus
+    state: directory
+    owner: prometheus
+    group: prometheus
+
+- name: "create prometheus var lib folder"
+  file:
+    path: /var/lib/prometheus
+    state: directory
+    owner: prometheus
+    group: prometheus
+
+- name: "create prometheus Download folder"
+  file:
+    path: /prometheus
+    state: directory
+    owner: prometheus
+    group: prometheus
+
+
+- name: Download Prometheus
+  get_url:
+    url: https://github.com/prometheus/prometheus/releases/download/v2.19.0/prometheus-2.19.0.linux-amd64.tar.gz
+    dest: /prometheus
+
+- name: Unarchive package
+  unarchive:
+    src: /prometheus/prometheus-2.19.0.linux-amd64.tar.gz
+    dest: /prometheus
+    remote_src: yes
+
+- name: "copy 1"
+  copy:
+    src: /prometheus/prometheus-2.19.0.linux-amd64/prometheus
+    dest: /usr/local/bin
+    remote_src: yes
+
+
+- name: "copy 2"
+  copy:
+    src: /prometheus/prometheus-2.19.0.linux-amd64/promtool
+    dest: /usr/local/bin
+    remote_src: yes
+
+
+- name: "copy 3"
+  copy:
+    src: /prometheus/prometheus-2.19.0.linux-amd64/consoles
+    dest: /etc/prometheus
+    remote_src: yes
+
+
+- name: "copy 4"
+  copy:
+    src: /prometheus/prometheus-2.19.0.linux-amd64/console_libraries
+    dest: /etc/prometheus
+    remote_src: yes
+
+- name: "copy prometheus file"
+  copy:
+    src: prometheus.yml
+    dest: /etc/prometheus/prometheus.yml
+
+- name: "chown 1"
+  file:
+    path: /etc/prometheus
+    owner: prometheus
+    group: prometheus
+    state: directory
+    recurse: yes
+
+- name: "chown 2"
+  file:
+    path: /usr/local/bin/prometheus
+    owner: prometheus
+    group: prometheus
+    mode: x
+
+
+- name: "chown 3"
+  file:
+    path: /usr/local/bin/promtool
+    owner: prometheus
+    group: prometheus
+    mode: x
+
+
+- name: "chown 4"
+  file:
+    path: /etc/prometheus/consoles
+    owner: prometheus
+    group: prometheus
+    state: directory
+    recurse: yes
+
+- name: "chown 5"
+  file:
+    path: /etc/prometheus/console_libraries
+    owner: prometheus
+    group: prometheus
+    state: directory
+    recurse: yes
+
+- name: "chown 6"
+  file:
+    path: /var/lib/prometheus
+    owner: prometheus
+    group: prometheus
+    state: directory
+    recurse: yes
+
+
+- name: "copy prometheus service"
+  copy:
+    src: prometheus.service
+    dest: /etc/systemd/system/prometheus.service
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+
+- name: Enable service prometheus and ensure it is not masked
+  systemd:
+    name: prometheus
+    enabled: yes
